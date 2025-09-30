@@ -65,4 +65,8 @@ fmod NATURAL is
    eq maximo(n, m) = if esMayor(n, m) then n else m fi .
    eq minimo(n, m) = if esMenor(n, m) then n else m fi .
 
+
+
+   
+
 endfm
