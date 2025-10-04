@@ -1,4 +1,3 @@
-
 ***************** NOMBRE *******************
 fmod NATURAL is
 
@@ -86,9 +85,9 @@ fmod NATURAL is
    eq minimo(n, m) = if esMenor(n, m) then n else m fi .
    --- 105---
    eq division(cero, cero) = NODEFINIDO .
-   eq division(n, cero) = INFINITO .
+   eq division(sucesor(n), cero) = INFINITO .
    eq division(cero, sucesor(m)) = cero .
-   eq division(n, sucesor(m)) = if esMenor(n, sucesor(m)) then cero else sucesor(division(suma(n, NEGATIVO), sucesor(m))) fi .
+   eq division(n, sucesor(m)) = if esMenor(n, sucesor(m)) then cero else sucesor(division(resta(n, sucesor(m)), sucesor(m))) fi .
    eq modulo(n, cero) = NODEFINIDO .
    eq modulo(cero, sucesor(m)) = cero .
    eq modulo(n, m) = resta(n, producto(division(n, m), m)) .
@@ -98,5 +97,4 @@ fmod NATURAL is
    eq esPar(cero) = true .
    eq esPar(sucesor(cero)) = false .
    eq esPar(sucesor(sucesor(n))) = esPar(n) .
-
 endfm
