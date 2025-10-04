@@ -100,28 +100,23 @@ fmod PILA is
    eq tope(pilaVacia) = ERRORPILAVACIA .
    eq tope(push(v, p)) = v .
 
-   --- esIgual entre pilas
+
    eq esIgual(pilaVacia, pilaVacia) = true .
    eq esIgual(push(v, p), push(w, q)) = (esIgual(v, w) and esIgual(p, q)) .
    eq esIgual(pilaVacia, push(v, p)) = false .
    eq esIgual(push(v, p), pilaVacia) = false .
 
-   --- primero: obtiene el primer elemento insertado
+  
    eq primero(pilaVacia) = ERRORPILAVACIA .
    eq primero(push(v, pilaVacia)) = v .
    eq primero(push(v, p)) = primero(p) .
 
-   --- tamano: cuenta el número total de elementos
+
    eq tamano(pilaVacia) = cero .
    eq tamano(push(v, p)) = sucesor(tamano(p)) .
 
-   --- cuentaVocal: número de veces que aparece una vocal
    eq cuentaVocal(v, pilaVacia) = cero .
-   eq cuentaVocal(v, push(w, p)) =
-      if esIgual(v, w)
-      then sucesor(cuentaVocal(v, p))
-      else cuentaVocal(v, p)
-      fi .
+   eq cuentaVocal(v, push(w, p)) = if esIgual(v, w) then sucesor(cuentaVocal(v, p)) else cuentaVocal(v, p) fi .
 
 endfm
 
