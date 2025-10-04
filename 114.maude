@@ -1,0 +1,95 @@
+***************** NOMBRE *******************
+fmod VOCAL is
+
+***************** CONJUNTOS ****************
+   protecting BOOL .
+   sort V .
+
+***************** SINTAXIS *****************
+   ops A E I O U : -> V .
+   op esIgual : V V -> Bool .
+
+***************** SEMANTICA ****************
+   vars v w : V .
+   eq esIgual(v, v) = true .
+   eq esIgual(v, w) = false .
+endfm
+
+
+***************** NOMBRE *******************
+fmod NATURAL is
+
+***************** CONJUNTOS ****************
+   protecting BOOL .
+   sort N .
+
+***************** SINTAXIS *****************
+   op cero : -> N .
+   op sucesor : N -> N .
+   op suma : N N -> N .
+
+***************** SEMANTICA ****************
+   vars n m : N .
+   eq suma(cero, n) = n .
+   eq suma(sucesor(m), n) = sucesor(suma(m, n)) .
+endfm
+
+
+***************** NOMBRE *******************
+fmod COLA is
+
+***************** CONJUNTOS ****************
+   protecting BOOL .
+   protecting VOCAL .
+   protecting NATURAL .
+
+   sort MensajeColas .
+   sort C .
+   subsort MensajeColas < V .
+
+***************** SINTAXIS *****************
+   op colaVacia : -> C .
+   op esVacia   : C -> Bool .
+   op meter     : V C -> C .
+   op sacar     : C -> C .
+   op cabecera  : C -> V .
+   
+   op ERRORCOLAVACIA : -> MensajeColas .
+
+   op meterVarias : V N C -> C .
+   op sacarVarias : N C -> C .
+   op esIgual     : C C -> Bool .
+   op tamano      : C -> N .
+
+***************** SEMANTICA ****************
+   vars c d : C .
+   vars v w : V .
+   vars n : N .
+
+   eq esVacia(colaVacia) = true .
+   eq esVacia(meter(v, c)) = false .
+
+   eq sacar(colaVacia) = colaVacia .
+   eq sacar(meter(v, colaVacia)) = colaVacia .
+   eq sacar(meter(v, c)) = if esVacia(c) then colaVacia else meter(v, sacar(c)) fi .
+
+   eq cabecera(colaVacia) = ERRORCOLAVACIA .
+   eq cabecera(meter(v, colaVacia)) = v .
+   eq cabecera(meter(v, c)) = if esVacia(c) then v else cabecera(c) fi .
+
+   eq meterVarias(v, cero, c) = c .
+   eq meterVarias(v, sucesor(n), c) = meter(v, meterVarias(v, n, c)) .
+
+   eq sacarVarias(cero, c) = c .
+   eq sacarVarias(sucesor(n), colaVacia) = colaVacia .
+   eq sacarVarias(sucesor(n), c) = sacarVarias(n, sacar(c)) .
+
+   eq esIgual(colaVacia, colaVacia) = true .
+   eq esIgual(meter(v, c), meter(w, d)) = (esIgual(v, w) and esIgual(c, d)) .
+   eq esIgual(colaVacia, meter(v, c)) = false .
+   eq esIgual(meter(v, c), colaVacia) = false .
+
+   eq tamano(colaVacia) = cero .
+   eq tamano(meter(v, c)) = sucesor(tamano(c)) .
+
+endfm
