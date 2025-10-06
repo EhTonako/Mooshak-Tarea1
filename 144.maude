@@ -1,0 +1,203 @@
+***************** NOMBRE *******************
+fmod NATURAL is
+
+***************** CONJUNTOS ****************
+   protecting BOOL .
+   sort N .
+   sort NoN .
+   subsort NoN < N .
+
+***************** SINTAXIS *****************
+   --- 102---
+   op cero : -> N .
+   op sucesor : N -> N .
+   op suma : N N -> N .
+   op esCero : N -> Bool .
+   op esIgual : N N -> Bool .
+   op esDistinto : N N -> Bool .
+   --- 102---
+   op producto : N N -> N .
+   op potencia : N N -> N .
+   op cuadrado : N -> N .
+   op factorial : N -> N .
+   --- 103---
+   op predecesor : N -> N .
+   op resta      : N N -> N .
+   op diferencia : N N -> N .
+   op difUno     : N N -> Bool .
+   --- 104---
+   op esMenor       : N N -> Bool .
+   op esMenorIgual  : N N -> Bool .
+   op esMayor       : N N -> Bool .
+   op esMayorIgual  : N N -> Bool .
+   op maximo        : N N -> N .
+   op minimo        : N N -> N .
+
+   op NODEFINIDO : -> NoN .
+   op INFINITO : -> NoN .
+   op NEGATIVO : -> NoN .
+
+***************** SEMANTICA ****************
+   var n m : N .
+
+   --- 101---
+   eq suma(cero, n) = n .
+   eq suma(sucesor(m), n) = sucesor(suma(m, n)) .
+   eq esCero(cero) = true .
+   eq esCero(sucesor(n)) = false .
+   eq esIgual(cero, n) = esCero(n) .
+   eq esIgual(sucesor(n), cero) = false .
+   eq esIgual(sucesor(n), sucesor(m)) = esIgual(n, m) .
+   eq esDistinto(n, m) = not esIgual(n, m) .
+   --- 102---
+   eq producto(cero, n) = cero .
+   eq producto(sucesor(m), n) = suma(n, producto(m, n)) .
+   eq potencia(n, cero) = sucesor(cero) .
+   eq potencia(cero, sucesor(cero)) = cero .
+   eq potencia(cero, sucesor(sucesor(m))) = cero .
+   eq potencia(cero, cero) = NODEFINIDO .
+   eq potencia(sucesor(n), sucesor(m)) = producto(sucesor(n), potencia(sucesor(n), m)) .
+   eq cuadrado(n) = producto(n, n) .
+   eq factorial(cero) = sucesor(cero) .
+   eq factorial(sucesor(n)) = producto(sucesor(n), factorial(n)) .
+   --- 103---
+   eq predecesor(cero) = NEGATIVO .
+   eq predecesor(sucesor(n)) = n .
+   eq resta(n, cero) = n .
+   eq resta(cero, sucesor(m)) = NEGATIVO .
+   eq resta(sucesor(n), sucesor(m)) = resta(n, m) .
+   eq diferencia(n, m) = if esMenorIgual(n, m) then resta(m, n) else resta(n, m) fi .
+   eq difUno(n, m) = if esCero(diferencia(n, m)) then true else esCero(predecesor(diferencia(n, m))) fi .
+   --- 104 ---
+   eq esMenor(cero, cero) = false .
+   eq esMenor(sucesor(n), cero) = false .
+   eq esMenor(cero, sucesor(m)) = true .
+   eq esMenor(sucesor(n), sucesor(m)) = esMenor(n, m) .
+   eq esMenorIgual(n, m) = (esMenor(n, m) or esIgual(n, m)) .
+   eq esMayor(n, m) = esMenor(m, n) .
+   eq esMayorIgual(n, m) = (esMayor(n, m) or esIgual(n, m)) .
+   eq maximo(n, m) = if esMayor(n, m) then n else m fi .
+   eq minimo(n, m) = if esMenor(n, m) then n else m fi .
+   
+endfm
+
+
+***************** NOMBRE *******************
+fmod VOCAL is
+
+***************** CONJUNTOS ****************
+  protecting BOOL .
+  sort V .
+
+***************** SINTAXIS *****************
+  ops A E I O U : -> V .
+  op esIgual : V V -> Bool .
+  op esDistinta : V V -> Bool .
+  op esMenor : V V -> Bool .
+
+***************** SEMANTICA ****************
+  var v w : V .
+
+  eq esIgual(v, v) = true .
+  eq esIgual(v, w) = false .
+  eq esDistinta(v, w) = not esIgual(v, w) .
+
+  eq esMenor(A, E) = true .
+  eq esMenor(A, I) = true .
+  eq esMenor(A, O) = true .
+  eq esMenor(A, U) = true .
+
+  eq esMenor(E, I) = true .
+  eq esMenor(E, O) = true .
+  eq esMenor(E, U) = true .
+
+  eq esMenor(I, O) = true .
+  eq esMenor(I, U) = true .
+
+  eq esMenor(O, U) = true .
+
+  eq esMenor(v, w) = false .
+
+endfm
+
+
+fmod ARBOLBINARIOVOCAL is
+  protecting BOOL .
+  protecting NATURAL .
+  protecting VOCAL .
+
+  sort AB .
+  sort MensajeArboles .
+  subsort MensajeArboles < AB .
+
+  op arbolVacio : -> AB .
+  op construir : V AB AB -> AB .
+  op construirRaiz : V -> AB .
+  op esVacio : AB -> Bool .
+  op altura : AB -> N .
+  op numNodos : AB -> N .
+
+  op ROTACIONNOVALIDA : -> MensajeArboles .
+
+  op diffAltura : AB -> N .
+  op esAVL : AB -> Bool .
+  op esPerfBal : AB -> Bool .
+
+  op rsd : AB -> AB .
+  op rsi : AB -> AB .
+  op rdd : AB -> AB .
+  op rdi : AB -> AB .
+
+  vars a a1 a2 a3 a4 : AB .
+  vars v v1 v2 : V .
+
+  eq esVacio(arbolVacio) = true .
+  eq esVacio(construir(v, a1, a2)) = false .
+  eq construirRaiz(v) = construir(v, arbolVacio, arbolVacio) .
+
+  eq altura(arbolVacio) = cero .
+  eq altura(construir(v, a1, a2)) = sucesor(maximo(altura(a1), altura(a2))) .
+
+  eq numNodos(arbolVacio) = cero .
+  eq numNodos(construir(v, a1, a2)) = suma(sucesor(numNodos(a1), numNodos(a2))) .
+
+  eq diffAltura(arbolVacio) = cero .
+  eq diffAltura(construir(v, a1, a2)) =
+    if esIgual(altura(a1), altura(a2)) then cero
+    else if esMenor(altura(a1), altura(a2)) then resta(altura(a2), altura(a1))
+    else resta(altura(a1), altura(a2))
+    fi fi .
+
+  eq esPerfBal(arbolVacio) = true .
+  eq esPerfBal(construir(v, a1, a2)) =
+    if esIgual(altura(a1), altura(a2)) then esPerfBal(a1) and esPerfBal(a2)
+    else false
+    fi .
+
+  eq esAVL(arbolVacio) = true .
+  eq esAVL(construir(v, a1, a2)) =
+    if esIgual(diffAltura(construir(v, a1, a2)), sucesor(cero))
+       or esMenor(diffAltura(construir(v, a1, a2)), sucesor(cero))
+    then esAVL(a1) and esAVL(a2)
+    else false
+    fi .
+
+  eq rsd(arbolVacio) = ROTACIONNOVALIDA .
+  eq rsd(construir(v, arbolVacio, a2)) = ROTACIONNOVALIDA .
+  eq rsd(construir(v, construir(v1, a1, a3), a2)) = construir(v1, a1, construir(v, a3, a2)) .
+
+  eq rsi(arbolVacio) = ROTACIONNOVALIDA .
+  eq rsi(construir(v, a1, arbolVacio)) = ROTACIONNOVALIDA .
+  eq rsi(construir(v, a1, construir(v1, a3, a2))) = construir(v1, construir(v, a1, a3), a2) .
+
+  eq rdd(arbolVacio) = ROTACIONNOVALIDA .
+  eq rdd(construir(v, arbolVacio, a2)) = ROTACIONNOVALIDA .
+  eq rdd(construir(v, construir(v1, a1, construir(v2, a3, a4)), a2)) =
+       rsd(construir(v, rsi(construir(v1, a1, construir(v2, a3, a4))), a2)) .
+
+  eq rdi(arbolVacio) = ROTACIONNOVALIDA .
+  eq rdi(construir(v, a1, arbolVacio)) = ROTACIONNOVALIDA .
+  eq rdi(construir(v, a1, construir(v1, construir(v2, a3, a4), a2))) =
+       rsi(construir(v, a1, rsd(construir(v1, construir(v2, a3, a4), a2)))) .
+
+endfm
