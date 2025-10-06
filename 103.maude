@@ -25,13 +25,6 @@ fmod NATURAL is
    op resta      : N N -> N .
    op diferencia : N N -> N .
    op difUno     : N N -> Bool .
-   --- 104---
-   op esMenor       : N N -> Bool .
-   op esMenorIgual  : N N -> Bool .
-   op esMayor       : N N -> Bool .
-   op esMayorIgual  : N N -> Bool .
-   op maximo        : N N -> N .
-   op minimo        : N N -> N .
 
    op NODEFINIDO : -> NoN .
    op INFINITO : -> NoN .
@@ -68,15 +61,5 @@ fmod NATURAL is
    eq resta(sucesor(n), sucesor(m)) = resta(n, m) .
    eq diferencia(n, m) = if esMenorIgual(n, m) then resta(m, n) else resta(n, m) fi .
    eq difUno(n, m) = if esCero(diferencia(n, m)) then true else esCero(predecesor(diferencia(n, m))) fi .
-   --- 104 ---
-   eq esMenor(cero, cero) = false .
-   eq esMenor(sucesor(n), cero) = false .
-   eq esMenor(cero, sucesor(m)) = true .
-   eq esMenor(sucesor(n), sucesor(m)) = esMenor(n, m) .
-   eq esMenorIgual(n, m) = (esMenor(n, m) or esIgual(n, m)) .
-   eq esMayor(n, m) = esMenor(m, n) .
-   eq esMayorIgual(n, m) = (esMayor(n, m) or esIgual(n, m)) .
-   eq maximo(n, m) = if esMayor(n, m) then n else m fi .
-   eq minimo(n, m) = if esMenor(n, m) then n else m fi .
    
 endfm
